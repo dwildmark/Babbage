@@ -1,7 +1,6 @@
 package se.mah.babbage;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -13,16 +12,16 @@ import java.util.ArrayList;
  * Created by jonasremgard on 08/06/16.
  */
 public class Controller {
-    public ArrayList<Marker> markerArrayList;
+    public ArrayList<CustomMarker> customMarkerArrayList;
     public JSONArray entities;
     double latitude = 55.6077098;
     double longitude = 12.992013;
-    int range = 5000;
+    int range = 500;
     MapsActivity mapsActivity;
 
     public Controller(MapsActivity mapsActivity){
         this.mapsActivity = mapsActivity;
-        markerArrayList = new ArrayList<>();
+        customMarkerArrayList = new ArrayList<>();
         new GetPOISClass().execute();
     }
 
@@ -43,13 +42,15 @@ public class Controller {
                     JSONObject category = row.getJSONObject("category");
                     JSONObject geometry = row.getJSONObject("geometry");
                     JSONArray coordinates = geometry.getJSONArray("coordinates");
-                    Marker marker = new Marker(row.getString("id"),row.getString("name"), row.getString("description"), category.getString("main"), category.getString("sub"), coordinates.getDouble(0), coordinates.getDouble(1));
-                    markerArrayList.add(marker);
+                    CustomMarker marker = new CustomMarker(row.getString("id"),row.getString("name"), row.getString("description"), category.getString("main"), category.getString("sub"), coordinates.getDouble(1), coordinates.getDouble(0));
+                    customMarkerArrayList.add(marker);
                     mapsActivity.addMarkers();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+
             }
+            mapsActivity.addMarkers();
         }
     }
     public void getPOIs(){

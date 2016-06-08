@@ -11,6 +11,7 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,22 +23,30 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import com.google.maps.android.geojson.GeoJsonFeature;
 import com.google.maps.android.geojson.GeoJsonLayer;
+import com.google.maps.android.geojson.GeoJsonPoint;
 import com.google.maps.android.geojson.GeoJsonPointStyle;
+import com.google.maps.android.geometry.Point;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
+import java.util.HashMap;
+import java.util.Map;
+
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
     private GoogleMap mMap;
     private Controller controller;
     double latitude = 55.6077098;
     double longitude = 12.992013;
     int range = 500;
+
+    private Map<Marker, CustomMarker> allMarkersMap = new HashMap<Marker, CustomMarker>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,13 +72,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
             return;
         }
         mMap.setMyLocationEnabled(true);
@@ -84,15 +86,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     public void addMarkers(){
-        for(int i = 0; i < controller.entities.length(); i++){
-            try {
-                GeoJsonLayer layer = new GeoJsonLayer(mMap, (JSONObject)controller.entities.get(i));
-
-                layer.addLayerToMap();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+        for(int i = 0; i < controller.customMarkerArrayList.size(); i++){
+            CustomMarker customMarker = controller.customMarkerArrayList.get(i);
+            Marker marker = mMap.addMarker(new MarkerOptions().position(customMarker.getLatLng()).draggable(false).title(customMarker.getName()));
+            allMarkersMap.put(marker, customMarker);
         }
+        MarkerAdapter adapter = new MarkerAdapter();
+        mMap.setInfoWindowAdapter(adapter);
+        mMap.setOnMarkerClickListener(this);
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -107,5 +108,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         spinner.setAdapter(adapter);
         return true;
+    }
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        marker.showInfoWindow();
+        return false;
     }
 }

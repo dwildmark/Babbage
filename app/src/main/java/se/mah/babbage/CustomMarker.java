@@ -5,14 +5,14 @@ import com.google.android.gms.maps.model.LatLng;
 /**
  * Created by jonasremgard on 08/06/16.
  */
-public class Marker {
+public class CustomMarker {
     private String id;
     private String mainCategory;
     private String subCategory;
     private String name;
     private LatLng latLng;
 
-    public Marker(String id, String name, String description, String mainCategory, String subCategory, double latitude, double longitude){
+    public CustomMarker(String id, String name, String description, String mainCategory, String subCategory, double latitude, double longitude){
         this.id = id;
         this.description = description;
         this.mainCategory = mainCategory;
