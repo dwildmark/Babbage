@@ -3,9 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/spinner"
-        android:title="ActionBar Spinner"
-
-        app:actionViewClass="android.widget.Spinner"
+        android:title="Filter"
         android:background="#ff00"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom"
+        android:enabled="false" />
+    <item android:id="@+id/filter_toilets"
+        android:title="Toilets"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+    <item android:id="@+id/filter_playgrounds"
+        android:title="Playgrounds"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+    <item android:id="@+id/filter_bikepumps"
+        android:title="Bikepumps"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
 </menu>
