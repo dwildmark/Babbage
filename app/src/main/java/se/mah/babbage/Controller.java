@@ -18,8 +18,10 @@ public class Controller {
     double latitude = 55.6077098;
     double longitude = 12.992013;
     int range = 500;
+    MapsActivity mapsActivity;
 
-    public Controller(){
+    public Controller(MapsActivity mapsActivity){
+        this.mapsActivity = mapsActivity;
         markerArrayList = new ArrayList<>();
         new GetPOISClass().execute();
     }
@@ -43,6 +45,7 @@ public class Controller {
                     JSONArray coordinates = geometry.getJSONArray("coordinates");
                     Marker marker = new Marker(row.getString("id"),row.getString("name"), row.getString("description"), category.getString("main"), category.getString("sub"), coordinates.getDouble(0), coordinates.getDouble(1));
                     markerArrayList.add(marker);
+                    mapsActivity.addMarkers();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

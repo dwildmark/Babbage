@@ -17,6 +17,13 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import com.google.maps.android.geojson.GeoJsonFeature;
+import com.google.maps.android.geojson.GeoJsonLayer;
+import com.google.maps.android.geojson.GeoJsonPointStyle;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
@@ -28,7 +35,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        controller = new Controller();
+        controller = new Controller(this);
         setContentView(R.layout.activity_maps);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -67,5 +74,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         LatLng myLocation = new LatLng(location.getLatitude(), location.getLongitude());
 
         mMap.moveCamera(CameraUpdateFactory.newLatLng(myLocation));
+    }
+
+    public void addMarkers(){
+        for(int i = 0; i < controller.entities.length(); i++){
+            try {
+                GeoJsonLayer layer = new GeoJsonLayer(mMap, (JSONObject)controller.entities.get(i));
+                layer.addLayerToMap();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
