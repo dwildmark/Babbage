@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">Babbage</string>
     <string name="title_activity_maps">Map</string>
+    <string-array name="spinner_list_item_array">
+        <item >Toilets</item>
+        <item >Playground</item>
+        <item >Bikepumps</item>
+    </string-array>
 </resources>

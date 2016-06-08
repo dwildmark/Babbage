@@ -17,7 +17,7 @@ public class Controller {
     public JSONArray entities;
     double latitude = 55.6077098;
     double longitude = 12.992013;
-    int range = 500;
+    int range = 5000;
     MapsActivity mapsActivity;
 
     public Controller(MapsActivity mapsActivity){
