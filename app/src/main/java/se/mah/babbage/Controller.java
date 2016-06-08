@@ -8,13 +8,11 @@ import org.json.JSONObject;
  */
 public class Controller {
     public Controller(){
-        getEntities();
+        getPOIs();
     }
 
-    public void getEntities(){
-        JSONArray entities = JSONGetter.getEntry();
+    public void getPOIs(){
+        //JSONArray entities = JSONGetter.getEntity("poi", latitude, longtidut, range);
 
     }
-
-
 }

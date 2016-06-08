@@ -7,11 +7,16 @@ import com.google.android.gms.maps.model.LatLng;
  */
 public class Marker {
     private String id;
+    private String mainCategory;
+    private String subCategory;
     private String name;
     private LatLng latLng;
 
-    public Marker(String id, String name, double latitude, double longitude){
+    public Marker(String id, String name, String description, String mainCategory, String subCategory, double latitude, double longitude){
         this.id = id;
+        this.description = description;
+        this.mainCategory = mainCategory;
+        this.subCategory = subCategory;
         this.name = name;
         setLatLng(latitude,longitude);
     }
@@ -39,4 +44,31 @@ public class Marker {
     public String getName() {
         return name;
     }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    private String description;
+
+    public String getMainCategory() {
+        return mainCategory;
+    }
+
+    public void setMainCategory(String mainCategory) {
+        this.mainCategory = mainCategory;
+    }
+
+    public String getSubCategory() {
+        return subCategory;
+    }
+
+    public void setSubCategory(String subCategory) {
+        this.subCategory = subCategory;
+    }
+
 }
