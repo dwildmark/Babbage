@@ -1,5 +1,7 @@
 package se.mah.babbage;
 
+import android.util.Log;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -61,27 +63,32 @@ public class JSONGetter {
     }
 
     public static String httpGet(String urlStr) throws IOException{
-        URL url = new URL(urlStr);
-        HttpURLConnection conn =
-                (HttpURLConnection) url.openConnection();
+        try {
+            URL url = new URL(urlStr);
+            HttpURLConnection conn =
+                    (HttpURLConnection) url.openConnection();
 
-        conn.setRequestProperty("Accept", "application/json");
-        if (conn.getResponseCode() != 200) {
-            throw new IOException(conn.getResponseMessage());
+            conn.setRequestProperty("Accept", "application/json");
+            try {
+                // Buffer the result into a string
+                BufferedReader rd = new BufferedReader(
+                        new InputStreamReader(conn.getInputStream()));
+                StringBuilder sb = new StringBuilder();
+                String line;
+                while ((line = rd.readLine()) != null) {
+                    sb.append(line);
+                }
+                rd.close();
+                return sb.toString();
+
+            } finally {
+                conn.disconnect();
+            }
         }
-
-        // Buffer the result into a string
-        BufferedReader rd = new BufferedReader(
-                new InputStreamReader(conn.getInputStream()));
-        StringBuilder sb = new StringBuilder();
-        String line;
-        while ((line = rd.readLine()) != null) {
-            sb.append(line);
+        catch(Exception e) {
+            Log.e("ERROR", e.getMessage(), e);
+            return null;
         }
-        rd.close();
-
-        conn.disconnect();
-        return sb.toString();
     }
 
     public static String httpPost(String urlStr, String data) throws Exception {

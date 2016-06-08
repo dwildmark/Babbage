@@ -1,6 +1,7 @@
 package se.mah.babbage;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -27,23 +28,20 @@ public class Controller {
 
         @Override
         protected Void doInBackground(Void... params) {
-            entities = JSONGetter.getEntities("poi", latitude, longitude, range);
+            entities = JSONGetter.getEntities("pois", latitude, longitude, range);
             return null;
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            while (entities==null){
-
-            }
             for(int i = 0; i < entities.length(); i++){
                 try {
                     JSONObject row = entities.getJSONObject(i);
                     JSONObject category = row.getJSONObject("category");
                     JSONObject geometry = row.getJSONObject("geometry");
-                    JSONObject coordinates = geometry.getJSONObject("coordinates");
-                    Marker marker = new Marker(row.getString("id"),row.getString("name"), row.getString("description"), category.getString("main"), category.getString("sub"), coordinates.getDouble("0"), coordinates.getDouble("1"));
+                    JSONArray coordinates = geometry.getJSONArray("coordinates");
+                    Marker marker = new Marker(row.getString("id"),row.getString("name"), row.getString("description"), category.getString("main"), category.getString("sub"), coordinates.getDouble(0), coordinates.getDouble(1));
                     markerArrayList.add(marker);
                 } catch (JSONException e) {
                     e.printStackTrace();
