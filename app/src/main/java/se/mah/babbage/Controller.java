@@ -14,9 +14,7 @@ import java.util.ArrayList;
 public class Controller {
     public ArrayList<CustomMarker> customMarkerArrayList;
     public JSONArray entities;
-    double latitude = 55.6077098;
-    double longitude = 12.992013;
-    int range = 500;
+    int range = 5000;
     MapsActivity mapsActivity;
 
     public Controller(MapsActivity mapsActivity){
@@ -29,7 +27,7 @@ public class Controller {
 
         @Override
         protected Void doInBackground(Void... params) {
-            entities = JSONGetter.getEntities("pois", latitude, longitude, range);
+            entities = JSONGetter.getEntities("pois", mapsActivity.myLocation.latitude, mapsActivity.myLocation.longitude, range);
             return null;
         }
 
@@ -44,16 +42,11 @@ public class Controller {
                     JSONArray coordinates = geometry.getJSONArray("coordinates");
                     CustomMarker marker = new CustomMarker(row.getString("id"),row.getString("name"), row.getString("description"), category.getString("main"), category.getString("sub"), coordinates.getDouble(1), coordinates.getDouble(0));
                     customMarkerArrayList.add(marker);
-                    mapsActivity.addMarkers();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
             }
-            mapsActivity.addMarkers();
+            mapsActivity.updateMarkers("all");
         }
-    }
-    public void getPOIs(){
-
     }
 }
