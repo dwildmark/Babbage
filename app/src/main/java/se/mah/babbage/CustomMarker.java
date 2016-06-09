@@ -12,6 +12,16 @@ public class CustomMarker {
     private String name;
     private LatLng latLng;
 
+    public boolean isPois() {
+        return pois;
+    }
+
+    public void setPois(boolean pois) {
+        this.pois = pois;
+    }
+
+    private boolean pois;
+
     public double getMeanRating() {
         return meanRating;
     }
@@ -22,12 +32,13 @@ public class CustomMarker {
 
     private double meanRating;
 
-    public CustomMarker(String id, String name, String description, String mainCategory, String subCategory, double latitude, double longitude){
+    public CustomMarker(String id, String name, String description, String mainCategory, String subCategory, double latitude, double longitude, boolean pois){
         this.id = id;
         this.description = description;
         this.mainCategory = mainCategory;
         this.subCategory = subCategory;
         this.name = name;
+        this.pois = pois;
         setLatLng(latitude,longitude);
     }
 
