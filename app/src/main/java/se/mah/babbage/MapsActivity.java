@@ -3,6 +3,7 @@ package se.mah.babbage;
 import android.*;
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.Location;
@@ -18,6 +19,7 @@ import android.support.v4.widget.TextViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -76,16 +78,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        popupWindow = new PopupWindow(this);
-        layout = new LinearLayout(this);
 
-        RelativeLayout relativeLayout = new RelativeLayout(this);
-        
-        SeekBar seekBar = new SeekBar(this);
-        /*layout.addView(findViewById(R.id.communicationFormLayout));
-        layout.setOrientation(LinearLayout.VERTICAL);*/
-        layout.addView(seekBar);
-        popupWindow.setContentView(layout);
     }
 
     /**
@@ -199,15 +192,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onInfoWindowClick(Marker marker) {
-        if (click) {
-            popupWindow.showAtLocation(layout, Gravity.CENTER, 0, 0);
-            popupWindow.update(50, 50, 300, 80);
-            Log.d("SHIT", "CLICKAD!!!");
-            click = false;
-        } else {
-            popupWindow.dismiss();
-            Log.d("SHIT", "NOOOOOTTT  CLICKAD!!!");
-            click = true;
-        }
+        Intent intent = new Intent(this,CommunicationForm.class);
+        intent.putExtra("id",marker.getId());
+        startActivity(intent);
     }
 }

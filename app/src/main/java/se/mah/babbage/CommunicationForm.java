@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,13 +16,17 @@ public class CommunicationForm extends Activity {
     private SeekBar seekBar;
     private EditText input;
     private Button sendInfo;
+    private String markerId;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.content_communication_form);
-
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            markerId = extras.getString("id");
+        }
 
         seekBar = (SeekBar) findViewById(R.id.seekBar);
         input = (EditText)findViewById(R.id.user_input);

@@ -41,7 +41,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".CommunicationForm"></activity>
+        <activity android:name=".CommunicationForm" android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name=".CommunicationForm" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

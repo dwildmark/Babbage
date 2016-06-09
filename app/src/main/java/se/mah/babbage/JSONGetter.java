@@ -10,10 +10,17 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 /**
  * Created by DennisW on 2016-06-08.
@@ -56,11 +63,13 @@ public class JSONGetter {
         return object;
     }
 
-    public static void postEntity(JSONObject object, String id) throws Exception {
-        StringBuilder sb = new StringBuilder();
-        sb.append("http://build.dia.mah.se/ugc");
-        httpPost(sb.toString(), object.toString());
+    public static void postEntity(String ugcId, String title, String comment, String username, String realname) throws IOException {
+        String[] params = {"title", "comment", "username", "realname"};
+        String[] data = {title, comment, username, realname};
+        String url = "http://build.dia.mah.se/ugc/" + ugcId;
+        httpPost(url, params, data);
     }
+
 
     public static String httpGet(String urlStr) throws IOException{
         try {
@@ -91,40 +100,29 @@ public class JSONGetter {
         }
     }
 
-    public static String httpPost(String urlStr, String data) throws Exception {
-        URL url = new URL(urlStr);
-        HttpURLConnection conn =
-                (HttpURLConnection) url.openConnection();
-        conn.setRequestMethod("POST");
-        conn.setDoOutput(true);
-        conn.setDoInput(true);
-        conn.setUseCaches(false);
-        conn.setAllowUserInteraction(false);
-        conn.setRequestProperty("Accept",
-                "application/json");
+    public static void httpPost(String urlStr, String[] params, String[] data) throws IOException {
 
-        // Create the form content
-        OutputStream out = conn.getOutputStream();
-        Writer writer = new OutputStreamWriter(out, "UTF-8");
-        writer.write(data);
-        writer.close();
-        out.close();
-
-        if (conn.getResponseCode() != 200) {
-            throw new IOException(conn.getResponseMessage());
-        }
-
-        // Buffer the result into a string
-        BufferedReader rd = new BufferedReader(
-                new InputStreamReader(conn.getInputStream()));
         StringBuilder sb = new StringBuilder();
-        String line;
-        while ((line = rd.readLine()) != null) {
-            sb.append(line);
+        for (int i = 0; i < params.length; i++) {
+            sb.append(params[i]);
+            sb.append("=");
+            sb.append(URLEncoder.encode(data[i], "UTF-8"));
+            sb.append("&");
         }
-        rd.close();
 
-        conn.disconnect();
-        return sb.toString();
+        OkHttpClient client = new OkHttpClient();
+        MediaType mediaType = MediaType.parse("application/x-www-form-urlencoded");
+        RequestBody body = RequestBody.create(mediaType, sb.toString() );
+        Request request = new Request.Builder()
+                .url(urlStr + "/comments")
+                .post(body)
+                .addHeader("cache-control", "no-cache")
+                .addHeader("content-type", "application/x-www-form-urlencoded")
+                .build();
+
+        Response response = client.newCall(request).execute();
+        if(response.code() != 200) {
+            throw new IOException(response.message());
+        }
     }
 }
