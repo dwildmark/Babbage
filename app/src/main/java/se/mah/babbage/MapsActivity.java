@@ -13,6 +13,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v4.view.ViewPager;
+import android.support.v4.widget.TextViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
@@ -21,7 +23,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
+import android.widget.SeekBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.fitness.data.Application;
@@ -45,7 +52,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener {
 
     private GoogleMap mMap;
     private Controller controller;
@@ -53,6 +60,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     double longitude = 12.992013;
     int range = 500;
     public LatLng myLocation;
+    private PopupWindow popupWindow;
+    LinearLayout layout;
+    LinearLayout.LayoutParams params;
+    boolean click = true;
+
 
     public Map<Marker, CustomMarker> allMarkersMap = new HashMap<Marker, CustomMarker>();
 
@@ -64,6 +76,16 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        popupWindow = new PopupWindow(this);
+        layout = new LinearLayout(this);
+
+        RelativeLayout relativeLayout = new RelativeLayout(this);
+        
+        SeekBar seekBar = new SeekBar(this);
+        /*layout.addView(findViewById(R.id.communicationFormLayout));
+        layout.setOrientation(LinearLayout.VERTICAL);*/
+        layout.addView(seekBar);
+        popupWindow.setContentView(layout);
     }
 
     /**
@@ -108,6 +130,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         MarkerAdapter adapter = new MarkerAdapter(this);
         mMap.setInfoWindowAdapter(adapter);
         mMap.setOnMarkerClickListener(this);
+        mMap.setOnInfoWindowClickListener(this);
     }
 
     public boolean filterMarkers(String filter, String category) {
@@ -127,8 +150,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        //getMenuInflater().inflate(R.menu.spinner_menu, menu);
-
         getMenuInflater().inflate(R.menu.spinner_menu, menu);
 
         MenuItem item = menu.findItem(R.id.spinner);
@@ -171,30 +192,22 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.filter_toilets:
-                updateMarkers("toilets");
-                break;
-            case R.id.filter_playgrounds:
-                updateMarkers("playground");
-                break;
-            case R.id.filter_bikepumps:
-                updateMarkers("bikepumps");
-                break;
-            case R.id.filter_all:
-                updateMarkers("all");
-                break;
-            case R.id.filter_sports:
-                updateMarkers("sports");
-                break;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
     public boolean onMarkerClick(Marker marker) {
         marker.showInfoWindow();
         return false;
+    }
+
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        if (click) {
+            popupWindow.showAtLocation(layout, Gravity.CENTER, 0, 0);
+            popupWindow.update(50, 50, 300, 80);
+            Log.d("SHIT", "CLICKAD!!!");
+            click = false;
+        } else {
+            popupWindow.dismiss();
+            Log.d("SHIT", "NOOOOOTTT  CLICKAD!!!");
+            click = true;
+        }
     }
 }

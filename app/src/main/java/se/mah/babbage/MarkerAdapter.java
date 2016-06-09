@@ -1,7 +1,10 @@
 package se.mah.babbage;
 
+import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -13,6 +16,7 @@ import com.google.android.gms.maps.model.Marker;
  */
 public class MarkerAdapter implements GoogleMap.InfoWindowAdapter {
     private MapsActivity mapsActivity;
+    private PopupWindow popupWindow;
     public MarkerAdapter(MapsActivity mapsActivity) {
         this.mapsActivity = mapsActivity;
     }
@@ -26,13 +30,18 @@ public class MarkerAdapter implements GoogleMap.InfoWindowAdapter {
         TextView description = (TextView) v.findViewById(R.id.tvMarkerDescription);
         description.setText(mapsActivity.allMarkersMap.get(marker).getDescription());
 
-        Button addComment = (Button) v.findViewById(R.id.btnMarkerAddComment);
+        //CommunicationForm communicationForm = new CommunicationForm();
+        //popupWindow = new PopupWindow();
+        /*Button addComment = (Button) v.findViewById(R.id.btnMarkerAddComment);
         addComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Log.d("SHIT", "NU SÅ!!!!");
+                //popupWindow.showAtLocation(mapsActivity.getCurrentFocus(), Gravity.BOTTOM, 10, 10);
+                //popupWindow.update(50, 50, 300, 80);
+                Log.d("BAJS", "CLICKED!");
             }
-        });
+        });*/
 
         return v;
     }

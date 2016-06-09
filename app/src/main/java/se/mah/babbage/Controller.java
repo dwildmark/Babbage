@@ -14,7 +14,7 @@ import java.util.ArrayList;
 public class Controller {
     public ArrayList<CustomMarker> customMarkerArrayList;
     public JSONArray entities;
-    int range = 5000;
+    int range = 500;
     MapsActivity mapsActivity;
 
     public Controller(MapsActivity mapsActivity){
