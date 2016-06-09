@@ -12,6 +12,16 @@ public class CustomMarker {
     private String name;
     private LatLng latLng;
 
+    public double getMeanRating() {
+        return meanRating;
+    }
+
+    public void setMeanRating(double meanRating) {
+        this.meanRating = meanRating;
+    }
+
+    private double meanRating;
+
     public CustomMarker(String id, String name, String description, String mainCategory, String subCategory, double latitude, double longitude){
         this.id = id;
         this.description = description;

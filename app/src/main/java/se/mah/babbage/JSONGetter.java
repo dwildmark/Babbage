@@ -63,13 +63,18 @@ public class JSONGetter {
         return object;
     }
 
-    public static void postEntity(String ugcId, String title, String comment, String username, String realname) throws IOException {
+    public static void postComment(String ugcId, String title, String comment, String username, String realname) throws IOException {
         String[] params = {"title", "comment", "username", "realname"};
         String[] data = {title, comment, username, realname};
-        String url = "http://build.dia.mah.se/ugc/" + ugcId;
+        String url = "http://build.dia.mah.se/ugc/" + ugcId + "/comments";
         httpPost(url, params, data);
     }
 
+    public static void postRating(String ugcId, int rating, String username) throws IOException {
+        String[] params = {"rating", "username" };
+        String[] data = {"" + rating, username};
+        httpPost("http://build.dia.mah.se/ugc/" + ugcId + "/ratings", params, data);
+    }
 
     public static String httpGet(String urlStr) throws IOException{
         try {
@@ -100,13 +105,32 @@ public class JSONGetter {
         }
     }
 
+    public static double getMeanRating(String id) throws JSONException {
+        JSONObject object = getEntityByID("ugc", id);
+        if(object != null) {
+            Log.d("BAJS", "Object is not null");
+            if (object.get("ratings") != null) {
+                JSONArray ratings = object.getJSONArray("ratings");
+                int sum = 0;
+                for (int i = 0; i < ratings.length(); i++) {
+                    JSONObject rating = (JSONObject) ratings.get(i);
+                    sum += rating.getInt("rating");
+                }
+                Log.d("BAJS", "WORKS!!!");
+                return (double) sum / ratings.length();
+            }
+        }
+        Log.d("BAJS", "RETURN 0000000");
+        return 0.0;
+    }
+
     public static void httpPost(String urlStr, String[] params, String[] data) throws IOException {
 
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < params.length; i++) {
             sb.append(params[i]);
             sb.append("=");
-            sb.append(URLEncoder.encode(data[i], "UTF-8"));
+            sb.append(data[i]);
             sb.append("&");
         }
 
@@ -114,7 +138,7 @@ public class JSONGetter {
         MediaType mediaType = MediaType.parse("application/x-www-form-urlencoded");
         RequestBody body = RequestBody.create(mediaType, sb.toString() );
         Request request = new Request.Builder()
-                .url(urlStr + "/comments")
+                .url(urlStr)
                 .post(body)
                 .addHeader("cache-control", "no-cache")
                 .addHeader("content-type", "application/x-www-form-urlencoded")

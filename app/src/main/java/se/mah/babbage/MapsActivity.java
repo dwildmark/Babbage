@@ -66,6 +66,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     LinearLayout layout;
     LinearLayout.LayoutParams params;
     boolean click = true;
+    double rating;
 
 
     public Map<Marker, CustomMarker> allMarkersMap = new HashMap<Marker, CustomMarker>();
@@ -186,14 +187,40 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        marker.showInfoWindow();
+        new GetRating(marker).execute();
         return false;
     }
 
     @Override
     public void onInfoWindowClick(Marker marker) {
         Intent intent = new Intent(this,CommunicationForm.class);
-        intent.putExtra("id",marker.getId());
+        intent.putExtra("id",allMarkersMap.get(marker).getId());
+        Log.d("BAJS",""+allMarkersMap.get(marker).getId());
         startActivity(intent);
+    }
+
+    private class GetRating extends AsyncTask<Void, Void, Void>{
+
+        Marker marker;
+        public GetRating(Marker marker){
+            this.marker = marker;
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            try {
+                rating = JSONGetter.getMeanRating(allMarkersMap.get(marker).getId());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            allMarkersMap.get(marker).setMeanRating(rating);
+            marker.showInfoWindow();
+        }
     }
 }

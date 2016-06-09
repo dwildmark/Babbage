@@ -17,6 +17,7 @@ public class CommunicationForm extends Activity {
     private EditText input;
     private Button sendInfo;
     private String markerId;
+    private Controller controller;
 
 
     @Override
@@ -29,17 +30,22 @@ public class CommunicationForm extends Activity {
         }
 
         seekBar = (SeekBar) findViewById(R.id.seekBar);
+        seekBar.setMax(10);
         input = (EditText)findViewById(R.id.user_input);
         sendInfo = (Button)findViewById(R.id.btnSend);
         sendInfo.setOnClickListener(new send());
+        controller = new Controller(this);
     }
 
     private class send implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            //Här ska vi skicka infon!
+            String comment = input.getText().toString();
+            int rating = seekBar.getProgress();
+            controller.sendUGC(markerId, comment, rating);
             Context context = getApplicationContext();
             Toast.makeText(context, "Tack för info, vi kommer se över detta!", Toast.LENGTH_LONG).show();
+            onBackPressed();
         }
     }
 }
