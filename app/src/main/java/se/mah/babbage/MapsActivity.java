@@ -18,6 +18,8 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -78,13 +80,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap = googleMap;
 
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
             return;
         }
@@ -99,18 +94,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         float zoomLevel = (float) 14.0; //This goes up to 21
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, zoomLevel));
     }
-
-    /*public void addMarkers() {
-        mMap.clear();
-        for (int i = 0; i < controller.customMarkerArrayList.size(); i++) {
-            CustomMarker customMarker = controller.customMarkerArrayList.get(i);
-            Marker marker = mMap.addMarker(new MarkerOptions().position(customMarker.getLatLng()).draggable(false).title(customMarker.getName()));
-            allMarkersMap.put(marker, customMarker);
-        }
-        MarkerAdapter adapter = new MarkerAdapter(this);
-        mMap.setInfoWindowAdapter(adapter);
-        mMap.setOnMarkerClickListener(this);
-    }*/
 
     public void updateMarkers(String filter){
         mMap.clear();
@@ -144,14 +127,51 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.android_action_bar_spinner_menu, menu);
+        //getMenuInflater().inflate(R.menu.spinner_menu, menu);
+
+        getMenuInflater().inflate(R.menu.spinner_menu, menu);
+
+        MenuItem item = menu.findItem(R.id.spinner);
+        Spinner spinner = (Spinner) MenuItemCompat.getActionView(item);
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.spinner_list_item_array, R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+                switch (position) {
+                    case 0:
+                        updateMarkers("all");
+                        break;
+                    case 1:
+                        updateMarkers("toilets");
+                        break;
+                    case 2:
+                        updateMarkers("bikepumps");
+                        break;
+                    case 3:
+                        updateMarkers("playground");
+                        break;
+                    case 4:
+                        updateMarkers("sports");
+                        break;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
 
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Context context = getApplicationContext();
         switch (item.getItemId()) {
             case R.id.filter_toilets:
                 updateMarkers("toilets");
