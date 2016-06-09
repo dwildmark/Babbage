@@ -38,6 +38,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -111,13 +112,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, zoomLevel));
     }
 
-    public void updateMarkers(String filter){
+    public void updateMarkers(String filter) {
         mMap.clear();
         allMarkersMap.clear();
-        for(int i = 0; i < controller.customMarkerArrayList.size(); i++){
+        for (int i = 0; i < controller.customMarkerArrayList.size(); i++) {
             CustomMarker customMarker = controller.customMarkerArrayList.get(i);
-            if(filterMarkers(filter,customMarker.getSubCategory())){
-                Marker marker = mMap.addMarker(new MarkerOptions().position(customMarker.getLatLng()).draggable(false).title(customMarker.getName()));
+            if (filterMarkers(filter, customMarker.getSubCategory())) {
+                Marker marker;
+                if(customMarker.isPois()){
+                   marker = mMap.addMarker(new MarkerOptions().position(customMarker.getLatLng()).draggable(false).title(customMarker.getName()));
+                } else {
+                    marker = mMap.addMarker(new MarkerOptions().position(customMarker.getLatLng()).draggable(false).title(customMarker.getName()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+                }
                 allMarkersMap.put(marker, customMarker);
             }
         }
@@ -193,16 +199,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onInfoWindowClick(Marker marker) {
-        Intent intent = new Intent(this,CommunicationForm.class);
-        intent.putExtra("id",allMarkersMap.get(marker).getId());
-        Log.d("BAJS",""+allMarkersMap.get(marker).getId());
+        Intent intent = new Intent(this, CommunicationForm.class);
+        intent.putExtra("id", allMarkersMap.get(marker).getId());
+        intent.putExtra("name", allMarkersMap.get(marker).getName());
+        Log.d("BAJS", "" + allMarkersMap.get(marker).getId());
         startActivity(intent);
     }
 
-    private class GetRating extends AsyncTask<Void, Void, Void>{
+    private class GetRating extends AsyncTask<Void, Void, Void> {
 
         Marker marker;
-        public GetRating(Marker marker){
+
+        public GetRating(Marker marker) {
             this.marker = marker;
         }
 

@@ -17,6 +17,7 @@ public class CommunicationForm extends Activity {
     private EditText input;
     private Button sendInfo;
     private String markerId;
+    private String name;
     private Controller controller;
 
 
@@ -27,11 +28,12 @@ public class CommunicationForm extends Activity {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             markerId = extras.getString("id");
+            name = extras.getString("name");
         }
 
         seekBar = (SeekBar) findViewById(R.id.seekBar);
         seekBar.setMax(10);
-        input = (EditText)findViewById(R.id.user_input);
+        input = (EditText)findViewById(R.id.etComments);
         sendInfo = (Button)findViewById(R.id.btnSend);
         sendInfo.setOnClickListener(new send());
         controller = new Controller(this);
