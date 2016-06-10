@@ -20,7 +20,7 @@ public class CommunicationForm extends Activity {
     private String markerId;
     private String name;
     private Controller controller;
-    private TextView tvPoiName, tvRating;
+    private TextView tvPoiName, tvRating, tvGood, tvBad;
 
 
     @Override
@@ -32,6 +32,7 @@ public class CommunicationForm extends Activity {
             markerId = extras.getString("id");
             name = extras.getString("name");
         }
+
 
         tvPoiName = (TextView) findViewById(R.id.tvPoiName);
         tvPoiName.setText(name);
@@ -46,16 +47,40 @@ public class CommunicationForm extends Activity {
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                 tvRating.setText("Ditt betyg: " + seekBar.getProgress() + "/10");
             }
+
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {}
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
             @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {}
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
         });
 
-        input = (EditText)findViewById(R.id.etComments);
-        sendInfo = (Button)findViewById(R.id.btnSend);
+        input = (EditText) findViewById(R.id.etComments);
+        sendInfo = (Button) findViewById(R.id.btnSend);
         sendInfo.setOnClickListener(new send());
         controller = new Controller(this);
+
+        tvBad = (TextView) findViewById(R.id.tvBad);
+        tvBad.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (seekBar.getProgress() > 0) {
+                    seekBar.setProgress(seekBar.getProgress() - 1);
+                }
+            }
+        });
+
+        tvGood = (TextView) findViewById(R.id.tvGood);
+        tvGood.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (seekBar.getProgress() < 10) {
+                    seekBar.setProgress(seekBar.getProgress() + 1);
+                }
+            }
+        });
     }
 
     private class send implements View.OnClickListener {

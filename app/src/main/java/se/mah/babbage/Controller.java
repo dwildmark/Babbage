@@ -21,11 +21,14 @@ public class Controller {
     public Controller(MapsActivity mapsActivity) {
         this.mapsActivity = mapsActivity;
         customMarkerArrayList = new ArrayList<>();
-        new GetPOISClass().execute();
     }
 
     public Controller(CommunicationForm communicationForm) {
         this.communicationForm = communicationForm;
+    }
+
+    public void fetchData(){
+        new GetPOISClass().execute();
     }
 
     public void sendUGC(String id, String comment, int rating) {

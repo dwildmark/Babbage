@@ -17,6 +17,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.TextViewCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -59,14 +60,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private GoogleMap mMap;
     private Controller controller;
-    double latitude = 55.6077098;
-    double longitude = 12.992013;
-    int range = 500;
     public LatLng myLocation;
-    private PopupWindow popupWindow;
-    LinearLayout layout;
-    LinearLayout.LayoutParams params;
-    boolean click = true;
     double rating;
 
 
@@ -80,8 +74,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
     }
+
 
     /**
      * Manipulates the map once available.
@@ -102,12 +96,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
         mMap.setMyLocationEnabled(true);
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
         Criteria criteria = new Criteria();
         String provider = locationManager.getBestProvider(criteria, true);
         Location location = locationManager.getLastKnownLocation(provider);
 
         myLocation = new LatLng(location.getLatitude(), location.getLongitude());
         controller = new Controller(this);
+        controller.fetchData();
         float zoomLevel = (float) 14.0; //This goes up to 21
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, zoomLevel));
     }
@@ -115,6 +111,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void updateMarkers(String filter) {
         mMap.clear();
         allMarkersMap.clear();
+        if(controller == null){
+            return;
+        }
         for (int i = 0; i < controller.customMarkerArrayList.size(); i++) {
             CustomMarker customMarker = controller.customMarkerArrayList.get(i);
             if (filterMarkers(filter, customMarker.getSubCategory())) {

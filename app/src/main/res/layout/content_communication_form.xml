@@ -102,6 +102,7 @@
                     android:text="Dåligt"
                     android:id="@+id/tvBad"
                     android:textStyle="bold"
+                    android:clickable="true"
                     android:textSize="15sp"
                     android:layout_alignParentLeft="true"
                     android:layout_marginLeft="@dimen/side_margin"/>
@@ -111,6 +112,7 @@
                     android:text="Bra!"
                     android:id="@+id/tvGood"
                     android:textStyle="bold"
+                    android:clickable="true"
                     android:textSize="15sp"
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="@dimen/side_margin"
