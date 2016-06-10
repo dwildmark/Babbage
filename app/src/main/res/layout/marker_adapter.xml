@@ -3,34 +3,59 @@
     android:id="@+id/markerView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_margin="10dp">
 
     <TextView
         android:id="@+id/tvMarkerTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
         android:text="Large Text"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
-
+        android:layout_marginTop="10dp"
+        android:layout_centerHorizontal="true"
+        />
     <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Small text"
+        android:id="@+id/tvRating"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/tvMarkerTitle" />
+    <TextView
+
         android:id="@+id/tvMarkerDescription"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
         android:text="New Text"
+        android:layout_marginTop="10dp"
         android:layout_centerHorizontal="true"
-        android:layout_below="@+id/tvRating" />
+        android:layout_below="@+id/tvRating"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Medium Text"
-        android:id="@+id/tvRating"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:id="@+id/textView"
+        android:layout_below="@+id/tvMarkerDescription"
+        android:layout_alignLeft="@+id/tvMarkerTitle"
+        android:layout_alignStart="@+id/tvMarkerTitle" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Lämna en kommentar!"
+        android:id="@+id/button"
+        android:layout_below="@+id/textView"
+        android:layout_centerHorizontal="true"
+        android:background="@color/colorAccent"
+        android:paddingLeft="7dp"
+        android:paddingRight="7dp"
+        android:layout_marginBottom="10dp"/>
+
+
 </RelativeLayout>

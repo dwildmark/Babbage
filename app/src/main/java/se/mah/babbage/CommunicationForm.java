@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.PopupWindow;
 import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class CommunicationForm extends Activity {
@@ -19,6 +20,7 @@ public class CommunicationForm extends Activity {
     private String markerId;
     private String name;
     private Controller controller;
+    private TextView tvPoiName, tvRating;
 
 
     @Override
@@ -31,8 +33,25 @@ public class CommunicationForm extends Activity {
             name = extras.getString("name");
         }
 
+        tvPoiName = (TextView) findViewById(R.id.tvPoiName);
+        tvPoiName.setText(name);
+
+        tvRating = (TextView) findViewById(R.id.tvRating);
+
         seekBar = (SeekBar) findViewById(R.id.seekBar);
         seekBar.setMax(10);
+        seekBar.setProgress(5);
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                tvRating.setText("Ditt betyg: " + seekBar.getProgress() + "/10");
+            }
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {}
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {}
+        });
+
         input = (EditText)findViewById(R.id.etComments);
         sendInfo = (Button)findViewById(R.id.btnSend);
         sendInfo.setOnClickListener(new send());
